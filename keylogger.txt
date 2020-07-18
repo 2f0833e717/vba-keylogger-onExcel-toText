@@ -1,0 +1,120 @@
+Option Explicit
+
+'PERSONAL.xls
+'[not module] ThisWorkbook
+'
+'[manual change (output log path) Line:60]datFile = "C:\<somePath>\ExcelInputLog.txt"
+'<how to use>
+'step1 line 17~99 copy to paste PERSONAL.xls ThisWorkbook
+'step2 line 106 ~ 120 copy to paste PERSONAL.xls some module
+'
+'if you need monitoring
+'PowerShell
+'  Get-Content  C:\<somePath>\ExcelInputLog.txt  -wait  -tail  0
+'================================================================
+
+
+Dim WithEvents xlApp As Application
+Private Sub Workbook_Open()
+   Set xlApp = Application
+End Sub
+Private Sub xlApp_WorkbookOpen(ByVal Wb As Workbook)
+   If Not Wb Is ThisWorkbook Then
+       Debug.Print Wb.Name & "is Open"
+       
+   End If
+End Sub
+Private Sub xlApp_SheetChange(ByVal sh As Object, ByVal Target As Range)
+
+    Debug.Print "--------------------------------"
+    Debug.Print "TimeStamp:" & Format(Now, "yyyy/mm/dd HH:MM:SS")
+    Debug.Print "Book:" & ActiveWorkbook.Name
+    Debug.Print "Sheet:" & sh.Name
+    Debug.Print "Cell:" & Target.Address(RowAbsolute:=False, ColumnAbsolute:=False)
+    
+    Dim Debug_c As Variant
+    Dim Debug_loopBreakCount As Integer
+    For Each Debug_c In Range(Target.Address)
+        Debug_loopBreakCount = Debug_loopBreakCount + 1
+        If Debug_loopBreakCount > 2 Then
+            Exit Sub
+            'MsgBox ("If Excel Frieze:Ctrl + Pause/Break")
+        End If
+        If Debug_c.Value <> "" Then
+            On Error Resume Next
+            Debug.Print "Value:" & Range(Target.Address).Value
+        Else
+            Debug.Print "Value:Empty"
+        End If
+    Next
+    
+    'ExcelInputLog
+    On Error Resume Next
+    
+    Dim datFile As String
+    
+    'Path Log.txt====================================================================================
+    'datFileを指定する場合（コメントアウト解除する場合）、全てのExcel操作でtextログファイルが一つにまとまります。
+    'If use Log.txt
+    '  only 1 file log.
+    '  datFile = "C:\<somePath>\ExcelInputLog.txt"
+    
+    'datFileを指定しない場合（コメントアウトのままの場合）、
+    'textログファイルは各Excelファイルがあるフォルダの下へ操作するたびに作成されます。
+    '（一つのExcelにつき一つのログファイル）。
+    'Else
+    '  use Log.txt "Any" Excel changes.
+    
+    'Path Log.txt====================================================================================
+    
+    datFile = ActiveWorkbook.Path & "\ExcelInputLog.txt"
+ 
+    Open datFile For Append As #1
+    
+    Print #1, "--------------------------------"
+    Print #1, "TimeStamp:" & Format(Now, "yyyy/mm/dd HH:MM:SS")
+    Print #1, "Book:" & ActiveWorkbook.Name
+    Print #1, "Sheet:" & sh.Name
+    Print #1, "Cell:" & Target.Address(RowAbsolute:=False, ColumnAbsolute:=False)
+    
+    Dim c As Variant
+    Dim loopBreakCount As Integer
+    For Each c In Range(Target.Address)
+        loopBreakCount = loopBreakCount + 1
+        If loopBreakCount > 2 Then
+            Exit Sub
+            'MsgBox ("If Excel Frieze:Ctrl + Pause/Break")
+        End If
+        If c.Value <> "" Then
+            On Error Resume Next
+            Print #1, "Value:" & Range(Target.Address).Value
+        Else
+            Print #1, "Value:Empty"
+        End If
+    Next
+    
+    Close #1
+    
+    
+End Sub
+
+
+
+
+
+
+'================================================================
+'Develop PERSONAL.xls
+'[module] reload Macro
+
+'Sub reloadPERSONALxls()
+'
+'    ThisWorkbook.Save
+'    Application.OnTime Now, "OpenBook"
+'    ThisWorkbook.Close
+'
+'End Sub
+'Private Sub OpenBook()
+'    ThisWorkbook.Activate
+'End Sub
+'================================================================
