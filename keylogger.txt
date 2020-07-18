@@ -3,10 +3,13 @@ Option Explicit
 'PERSONAL.xls
 '[not module] ThisWorkbook
 '
-'[manual change (output log path) Line:60]datFile = "C:\<somePath>\ExcelInputLog.txt"
+'[manual change (output log path) Line:68 or 74]
+    '  datFile = "C:\<somePath>\ExcelInputLog.txt"
+    '  datFile = ActiveWorkbook.Path & "\ExcelInputLog.txt"
+
 '<how to use>
-'step1 line 17~99 copy to paste PERSONAL.xls ThisWorkbook
-'step2 line 106 ~ 120 copy to paste PERSONAL.xls some module
+'step1 line 20~105 copy to paste PERSONAL.xls ThisWorkbook
+'step2 line 112 ~ 126 copy to paste PERSONAL.xls some module
 '
 'if you need monitoring
 'PowerShell
@@ -18,11 +21,17 @@ Dim WithEvents xlApp As Application
 Private Sub Workbook_Open()
    Set xlApp = Application
 End Sub
+Private Sub xlApp_WorkbookAfterSave(ByVal Wb As Workbook, ByVal Success As Boolean)
+    Application.StatusBar = "PERSONALxls Reloading..."
+    Call ab001_reloadPERSONALxls
+End Sub
+
 Private Sub xlApp_WorkbookOpen(ByVal Wb As Workbook)
-   If Not Wb Is ThisWorkbook Then
-       Debug.Print Wb.Name & "is Open"
-       
-   End If
+    On Error Resume Next
+    Application.StatusBar = False
+    If Not Wb Is ThisWorkbook Then
+        Debug.Print "<<" & Wb.Name & ">> is Open"
+    End If
 End Sub
 Private Sub xlApp_SheetChange(ByVal sh As Object, ByVal Target As Range)
 
@@ -55,20 +64,17 @@ Private Sub xlApp_SheetChange(ByVal sh As Object, ByVal Target As Range)
     
     'Path Log.txt====================================================================================
     'datFileを指定する場合（コメントアウト解除する場合）、全てのExcel操作でtextログファイルが一つにまとまります。
-    'If use Log.txt
-    '  only 1 file log.
+    'If use Log.txt only 1 file log.
     '  datFile = "C:\<somePath>\ExcelInputLog.txt"
     
     'datFileを指定しない場合（コメントアウトのままの場合）、
     'textログファイルは各Excelファイルがあるフォルダの下へ操作するたびに作成されます。
     '（一つのExcelにつき一つのログファイル）。
-    'Else
-    '  use Log.txt "Any" Excel changes.
+    'Else use Log.txt "Any" Excel changes.
+    '  datFile = ActiveWorkbook.Path & "\ExcelInputLog.txt"
     
     'Path Log.txt====================================================================================
     
-    datFile = ActiveWorkbook.Path & "\ExcelInputLog.txt"
- 
     Open datFile For Append As #1
     
     Print #1, "--------------------------------"
@@ -109,7 +115,7 @@ End Sub
 
 'Sub reloadPERSONALxls()
 '
-'    ThisWorkbook.Save
+'    'ThisWorkbook.Save
 '    Application.OnTime Now, "OpenBook"
 '    ThisWorkbook.Close
 '
