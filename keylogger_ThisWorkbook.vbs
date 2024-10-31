@@ -16,7 +16,6 @@ Option Explicit
 '  Get-Content  C:\<somePath>\ExcelInputLog.txt  -wait  -tail  0
 '================================================================
 
-
 Dim WithEvents xlApp As Application
 Private Sub Workbook_Open()
    Set xlApp = Application
@@ -63,13 +62,13 @@ Private Sub xlApp_SheetChange(ByVal sh As Object, ByVal Target As Range)
     Dim datFile As String
     
     'Path Log.txt====================================================================================
-    'datFile‚ğw’è‚·‚éê‡iƒRƒƒ“ƒgƒAƒEƒg‰ğœ‚·‚éê‡jA‘S‚Ä‚ÌExcel‘€ì‚ÅtextƒƒOƒtƒ@ƒCƒ‹‚ªˆê‚Â‚É‚Ü‚Æ‚Ü‚è‚Ü‚·B
+    'datFileï¿½ï¿½ï¿½wï¿½è‚·ï¿½ï¿½ê‡ï¿½iï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Aï¿½Eï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½jï¿½Aï¿½Sï¿½Ä‚ï¿½Excelï¿½ï¿½ï¿½ï¿½ï¿½textï¿½ï¿½ï¿½Oï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â‚É‚Ü‚Æ‚Ü‚ï¿½Ü‚ï¿½ï¿½B
     'If use Log.txt only 1 file log.
     '  datFile = "C:\<somePath>\ExcelInputLog.txt"
     
-    'datFile‚ğw’è‚µ‚È‚¢ê‡iƒRƒƒ“ƒgƒAƒEƒg‚Ì‚Ü‚Ü‚Ìê‡jA
-    'textƒƒOƒtƒ@ƒCƒ‹‚ÍŠeExcelƒtƒ@ƒCƒ‹‚ª‚ ‚éƒtƒHƒ‹ƒ_‚Ì‰º‚Ö‘€ì‚·‚é‚½‚Ñ‚Éì¬‚³‚ê‚Ü‚·B
-    'iˆê‚Â‚ÌExcel‚É‚Â‚«ˆê‚Â‚ÌƒƒOƒtƒ@ƒCƒ‹jB
+    'datFileï¿½ï¿½ï¿½wï¿½è‚µï¿½È‚ï¿½ï¿½ê‡ï¿½iï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Aï¿½Eï¿½gï¿½Ì‚Ü‚Ü‚Ìê‡ï¿½jï¿½A
+    'textï¿½ï¿½ï¿½Oï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ÍŠeExcelï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½Hï¿½ï¿½ï¿½_ï¿½Ì‰ï¿½ï¿½Ö‘ï¿½ï¿½ì‚·ï¿½é‚½ï¿½Ñ‚Éì¬ï¿½ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½B
+    'ï¿½iï¿½ï¿½Â‚ï¿½Excelï¿½É‚Â‚ï¿½ï¿½ï¿½Â‚Ìƒï¿½ï¿½Oï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½jï¿½B
     'Else use Log.txt "Any" Excel changes.
     '  datFile = ActiveWorkbook.Path & "\ExcelInputLog.txt"
     
@@ -101,26 +100,4 @@ Private Sub xlApp_SheetChange(ByVal sh As Object, ByVal Target As Range)
     
     Close #1
     
-    
 End Sub
-
-
-
-
-
-
-'================================================================
-'Develop PERSONAL.xls
-'[module] reload Macro
-
-'Sub reloadPERSONALxls()
-'
-'    'ThisWorkbook.Save
-'    Application.OnTime Now, "OpenBook"
-'    ThisWorkbook.Close
-'
-'End Sub
-'Private Sub OpenBook()
-'    ThisWorkbook.Activate
-'End Sub
-'================================================================
